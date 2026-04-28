@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Hub from './pages/Hub.jsx'
 import MacroCalculator from './pages/MacroCalculator.jsx'
 import MealPrepGenerator from './pages/MealPrepGenerator.jsx'
+import VividVision from './pages/VividVision.jsx'
 
 export default function App() {
   return (
@@ -9,6 +10,11 @@ export default function App() {
       <Route path="/" element={<Hub />} />
       <Route path="/macros" element={<MacroCalculator />} />
       <Route path="/meal-prep" element={<MealPrepGenerator />} />
+      <Route path="/vivid-vision" element={<VividVision />} />
+
+      {/* ── ADD NEW TOOLS HERE ──
+      <Route path="/new-tool" element={<NewTool />} />
+      */}
     </Routes>
   )
 }

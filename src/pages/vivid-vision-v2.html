@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vivid Vision · MVMNT</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Lora:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #AD2E21;
+    --red-dim: rgba(173,46,33,0.09);
+    --red-glow: rgba(173,46,33,0.18);
+    --cream: #F4F0EA;
+    --cream-dark: #EAE4DB;
+    --cream-darker: #DDD6CB;
+    --text-primary: #1a1917;
+    --text-secondary: #51524B;
+    --text-muted: #7C6F5E;
+    --card-bg: #FDFAF6;
+    --card-border: #E0D9CF;
+    --surface: #F4F0EA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--surface);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── LANDING ── */
+  #landing {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 24px;
+    position: relative; z-index: 1;
+  }
+
+  .landing-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 12px;
+    letter-spacing: 0.3em; color: var(--red);
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 48px;
+  }
+
+  .logo-line { height: 1px; width: 40px; background: var(--red); opacity: 0.35; }
+
+  .landing-eyebrow {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: 16px; color: var(--text-muted);
+    margin-bottom: 18px;
+  }
+
+  .landing-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(56px, 12vw, 100px);
+    line-height: 0.85; text-transform: uppercase;
+    letter-spacing: -0.02em; color: var(--text-primary);
+    margin-bottom: 28px;
+  }
+
+  .landing-title span { color: var(--red); display: block; }
+
+  .landing-body {
+    font-size: 16px; color: var(--text-muted);
+    max-width: 460px; line-height: 1.75; margin-bottom: 40px;
+  }
+
+  .landing-body strong { color: var(--text-secondary); font-weight: 600; }
+
+  .landing-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 20px; padding: 8px 18px 8px 12px;
+    font-size: 12px; color: var(--text-muted); margin-bottom: 44px;
+    box-shadow: 0 2px 8px rgba(124,111,94,0.07);
+  }
+
+  .landing-tag span { font-weight: 600; color: var(--text-secondary); }
+
+  .start-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 16px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    background: var(--red); color: white;
+    border: none; border-radius: 10px;
+    padding: 18px 48px; cursor: pointer;
+    box-shadow: 0 4px 20px var(--red-glow);
+    transition: all 0.2s;
+  }
+
+  .start-btn:hover { background: #c23526; transform: translateY(-2px); box-shadow: 0 8px 28px var(--red-glow); }
+
+  .landing-time {
+    margin-top: 16px; font-size: 12px;
+    color: var(--text-muted); font-style: italic;
+    font-family: 'Lora', serif;
+  }
+
+  /* ── BUILDER ── */
+  #builder { display: none; position: relative; z-index: 1; }
+
+  .builder-nav {
+    position: sticky; top: 0;
+    background: rgba(244,240,234,0.93);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--cream-dark);
+    z-index: 100; padding: 14px 24px;
+  }
+
+  .nav-inner {
+    max-width: 760px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  }
+
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 13px;
+    letter-spacing: 0.22em; color: var(--red);
+    text-transform: uppercase; flex-shrink: 0;
+  }
+
+  .nav-progress { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+
+  .nav-progress-meta { display: flex; justify-content: space-between; align-items: center; }
+
+  .nav-section-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted);
+  }
+
+  .nav-pct {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; color: var(--red);
+  }
+
+  .nav-bar { height: 2px; background: var(--cream-darker); border-radius: 2px; overflow: hidden; }
+  .nav-bar-fill { height: 100%; background: var(--red); border-radius: 2px; transition: width 0.5s ease; }
+
+  .builder-body { max-width: 760px; margin: 0 auto; padding: 0 24px 80px; }
+
+  .section-dots {
+    display: flex; gap: 6px; align-items: center;
+    justify-content: center; padding: 24px 0 32px;
+  }
+
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cream-darker); transition: all 0.3s; }
+  .dot.active { background: var(--red); width: 20px; border-radius: 3px; }
+  .dot.done { background: var(--text-muted); }
+
+  .section-intro {
+    padding: 52px 0 36px;
+    border-bottom: 1px solid var(--cream-dark);
+    margin-bottom: 40px;
+  }
+
+  .si-chapter {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .si-chapter::after { content: ''; display: block; height: 1px; flex: 1; background: rgba(173,46,33,0.2); }
+
+  .si-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: clamp(36px, 7vw, 60px);
+    line-height: 0.9; text-transform: uppercase;
+    letter-spacing: -0.01em; color: var(--text-primary); margin-bottom: 14px;
+  }
+
+  .si-title em { color: var(--red); font-style: normal; }
+
+  .si-desc {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 520px;
+  }
+
+  .questions-stack { display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; }
+
+  .q-block {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 24px 24px 26px;
+    box-shadow: 0 2px 12px rgba(124,111,94,0.07); transition: border-color 0.2s;
+  }
+
+  .q-block:focus-within {
+    border-color: rgba(173,46,33,0.3);
+    box-shadow: 0 2px 12px rgba(124,111,94,0.07), 0 0 0 3px var(--red-dim);
+  }
+
+  .q-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 6px;
+  }
+
+  .q-prompt {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: clamp(17px, 3vw, 22px);
+    text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--text-primary); line-height: 1.15; margin-bottom: 6px;
+  }
+
+  .q-hint {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: 13px; color: var(--text-muted);
+    line-height: 1.6; margin-bottom: 16px;
+  }
+
+  textarea {
+    width: 100%; background: var(--cream);
+    border: 1px solid var(--cream-darker); border-radius: 10px;
+    padding: 14px 16px; font-family: 'Barlow', sans-serif;
+    font-size: 14px; font-weight: 500; color: var(--text-primary);
+    outline: none; resize: none; line-height: 1.6;
+    transition: border-color 0.2s, background 0.2s; min-height: 90px;
+  }
+
+  textarea:focus { border-color: var(--red); background: var(--card-bg); box-shadow: 0 0 0 3px var(--red-dim); }
+  textarea::placeholder { color: var(--cream-darker); font-style: italic; }
+
+  input[type=text] {
+    width: 100%; background: var(--cream);
+    border: 1px solid var(--cream-darker); border-radius: 10px;
+    padding: 13px 16px; font-family: 'Barlow', sans-serif;
+    font-size: 14px; font-weight: 500; color: var(--text-primary);
+    outline: none; transition: border-color 0.2s, background 0.2s;
+  }
+
+  input[type=text]:focus { border-color: var(--red); background: var(--card-bg); box-shadow: 0 0 0 3px var(--red-dim); }
+  input[type=text]::placeholder { color: var(--cream-darker); font-style: italic; }
+
+  .chip-group { display: flex; flex-wrap: wrap; gap: 9px; }
+
+  .chip {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 10px 18px; border-radius: 8px;
+    border: 1.5px solid var(--card-border); background: var(--cream);
+    color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+  }
+
+  .chip:hover { border-color: var(--red); color: var(--red); }
+  .chip.selected { border-color: var(--red); background: var(--red-dim); color: var(--red); }
+
+  .section-nav { display: flex; gap: 12px; padding-top: 8px; }
+
+  .btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 14px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    border: none; border-radius: 8px; padding: 14px 24px;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .btn-primary { background: var(--red); color: white; flex: 1; box-shadow: 0 2px 12px var(--red-glow); }
+  .btn-primary:hover { background: #c23526; box-shadow: 0 6px 20px var(--red-glow); transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); }
+  .btn-ghost:hover { background: var(--cream-dark); color: var(--text-primary); }
+
+  /* ── GENERATING SCREEN ── */
+  #generating {
+    display: none; min-height: 100vh;
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 60px 24px;
+    position: relative; z-index: 1;
+  }
+
+  .gen-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 12px;
+    letter-spacing: 0.3em; color: var(--red);
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 52px;
+  }
+
+  .gen-spinner {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 2px solid var(--cream-darker);
+    border-top-color: var(--red);
+    animation: spin 1s linear infinite; margin: 0 auto 28px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .gen-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: clamp(28px, 5vw, 44px);
+    text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--text-primary); line-height: 1; margin-bottom: 14px;
+  }
+
+  .gen-sub {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: 15px; color: var(--text-muted);
+    line-height: 1.7; max-width: 380px; margin: 0 auto 36px;
+  }
+
+  .gen-progress-wrap { width: 320px; max-width: 100%; }
+
+  .gen-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+  .gen-step {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px; color: var(--text-muted);
+    font-family: 'Barlow', sans-serif; font-weight: 500;
+    opacity: 0.4; transition: all 0.4s;
+  }
+
+  .gen-step.active { opacity: 1; color: var(--text-primary); }
+  .gen-step.done { opacity: 0.6; color: var(--text-muted); }
+
+  .gen-step-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--cream-darker); flex-shrink: 0; transition: all 0.4s;
+  }
+
+  .gen-step.active .gen-step-dot { background: var(--red); box-shadow: 0 0 8px var(--red-glow); }
+  .gen-step.done .gen-step-dot { background: var(--text-muted); }
+
+  /* ── RESULTS ── */
+  #results { display: none; position: relative; z-index: 1; }
+
+  .results-nav {
+    position: sticky; top: 0;
+    background: rgba(244,240,234,0.93);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--cream-dark);
+    z-index: 100; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+
+  .rn-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 13px;
+    letter-spacing: 0.22em; color: var(--red); text-transform: uppercase;
+  }
+
+  .rn-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted);
+  }
+
+  .rn-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--red); color: white;
+    border: none; border-radius: 6px;
+    padding: 8px 16px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+
+  .rn-btn:hover { background: #c23526; }
+
+  .results-body { max-width: 760px; margin: 0 auto; padding: 0 24px 100px; }
+
+  /* ── VISION COVER ── */
+  .vision-cover {
+    padding: 64px 0 52px; text-align: center;
+    border-bottom: 1px solid var(--cream-dark); margin-bottom: 56px;
+  }
+
+  .vc-eyebrow { font-family: 'Lora', serif; font-style: italic; font-size: 15px; color: var(--text-muted); margin-bottom: 16px; }
+
+  .vc-name {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-size: clamp(52px, 10vw, 88px); text-transform: uppercase;
+    letter-spacing: 0.02em; color: var(--text-primary); line-height: 0.9; margin-bottom: 8px;
+  }
+
+  .vc-subtitle {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700;
+    letter-spacing: 0.28em; text-transform: uppercase; color: var(--red); margin-bottom: 32px;
+  }
+
+  .vc-meta {
+    display: inline-flex; align-items: center; gap: 0;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 10px; overflow: hidden; margin-bottom: 32px;
+  }
+
+  .vc-meta-cell {
+    padding: 14px 24px; text-align: center;
+    border-right: 1px solid var(--card-border);
+  }
+
+  .vc-meta-cell:last-child { border-right: none; }
+
+  .vc-meta-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+
+  .vc-meta-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 20px;
+    color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.02em;
+  }
+
+  .vc-meta-value.red { color: var(--red); }
+
+  /* ── NARRATIVE CARD ── */
+  .narrative-card {
+    background: var(--text-primary); border-radius: 20px;
+    padding: 44px 40px; margin-bottom: 48px;
+    position: relative; overflow: hidden;
+  }
+
+  .narrative-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 95% 5%, rgba(173,46,33,0.28) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  .nc-quote {
+    font-family: 'Lora', serif; font-size: 90px;
+    color: rgba(173,46,33,0.2); line-height: 0.7;
+    margin-bottom: 16px; display: block; position: relative; z-index: 1;
+  }
+
+  .nc-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.28em;
+    text-transform: uppercase; color: rgba(255,255,255,0.3);
+    margin-bottom: 18px; position: relative; z-index: 1;
+  }
+
+  .nc-body {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: clamp(16px, 2.5vw, 20px);
+    color: rgba(255,255,255,0.88); line-height: 1.8;
+    position: relative; z-index: 1;
+  }
+
+  .nc-body strong { color: white; font-style: normal; }
+  .nc-body em { color: var(--red); }
+
+  .nc-sig {
+    margin-top: 28px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(255,255,255,0.25);
+    position: relative; z-index: 1;
+  }
+
+  /* ── VISION SECTION ── */
+  .vision-section { margin-bottom: 52px; }
+
+  .vs-head {
+    display: flex; align-items: flex-end; gap: 16px;
+    margin-bottom: 20px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+
+  .vs-icon { font-size: 32px; line-height: 1; flex-shrink: 0; }
+
+  .vs-chapter {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--red); margin-bottom: 4px;
+  }
+
+  .vs-title {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-size: clamp(26px, 5vw, 40px); text-transform: uppercase;
+    letter-spacing: 0.01em; color: var(--text-primary); line-height: 0.95;
+  }
+
+  /* AI generated narrative block */
+  .vs-narrative {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 28px 30px;
+    box-shadow: 0 2px 12px rgba(124,111,94,0.07);
+    position: relative; overflow: hidden;
+  }
+
+  .vs-narrative::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--red); opacity: 0.5;
+  }
+
+  .vs-narrative-text {
+    font-family: 'Lora', serif; font-size: 16px;
+    color: var(--text-secondary); line-height: 1.85;
+  }
+
+  .vs-narrative-text p { margin-bottom: 14px; }
+  .vs-narrative-text p:last-child { margin-bottom: 0; }
+
+  /* loading skeleton */
+  .vs-skeleton {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 28px 30px;
+    box-shadow: 0 2px 12px rgba(124,111,94,0.07);
+  }
+
+  .skeleton-line {
+    height: 14px; background: var(--cream-dark);
+    border-radius: 4px; margin-bottom: 10px;
+    animation: shimmer 1.6s ease infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* ── CLOSING ── */
+  .closing-card {
+    background: var(--red); border-radius: 20px;
+    padding: 44px 36px; text-align: center;
+    margin-bottom: 28px; position: relative; overflow: hidden;
+  }
+
+  .closing-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .cc-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.28em;
+    text-transform: uppercase; color: rgba(255,255,255,0.5);
+    margin-bottom: 16px; position: relative; z-index: 1;
+  }
+
+  .cc-text {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-size: clamp(22px, 4vw, 34px); text-transform: uppercase;
+    letter-spacing: 0.03em; color: white; line-height: 1.2;
+    max-width: 480px; margin: 0 auto 18px; position: relative; z-index: 1;
+  }
+
+  .cc-sub {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: 14px; color: rgba(255,255,255,0.65);
+    line-height: 1.65; position: relative; z-index: 1; max-width: 440px; margin: 0 auto;
+  }
+
+  .action-row { display: flex; gap: 12px; margin-bottom: 16px; }
+
+  .act-btn {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 13px 20px; border-radius: 8px;
+    border: none; cursor: pointer; transition: all 0.2s; flex: 1;
+  }
+
+  .act-btn.primary { background: var(--red); color: white; }
+  .act-btn.primary:hover { background: #c23526; }
+  .act-btn.secondary { background: var(--cream-dark); color: var(--text-muted); border: 1px solid var(--card-border); }
+  .act-btn.secondary:hover { background: var(--cream-darker); color: var(--text-primary); }
+
+  .mvmnt-footer {
+    text-align: center; margin-top: 48px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: #BFB8A8;
+  }
+
+  .toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    background: var(--text-primary); color: var(--cream);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 11px 24px; border-radius: 20px;
+    opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 999;
+  }
+
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 560px) {
+    .narrative-card { padding: 32px 24px; }
+    .vision-cover { padding: 48px 0 40px; }
+    .action-row { flex-direction: column; }
+    .vc-meta { flex-direction: column; width: 100%; }
+    .vc-meta-cell { border-right: none; border-bottom: 1px solid var(--card-border); }
+    .vc-meta-cell:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing">
+  <div class="landing-logo"><span class="logo-line"></span>MVMNT<span class="logo-line"></span></div>
+  <div class="landing-eyebrow">A tool for the life you're building toward</div>
+  <div class="landing-title">Vivid<span>Vision</span></div>
+  <p class="landing-body">Most people live by default — reacting, adjusting, hoping things improve. <strong>A Vivid Vision changes that.</strong> It's a written description of your future life, told in present tense, as if you're already living it. Answer honestly. Your vision will be written for you.</p>
+  <div class="landing-tag">📖 <span>Inspired by</span> Cameron Herold's Vivid Vision framework</div>
+  <button class="start-btn" onclick="startBuilder()">Begin Your Vision →</button>
+  <div class="landing-time">Takes about 15–20 minutes. Your answers will be shaped into your vision.</div>
+</div>
+
+<!-- BUILDER -->
+<div id="builder">
+  <div class="builder-nav">
+    <div class="nav-inner">
+      <div class="nav-logo">MVMNT</div>
+      <div class="nav-progress">
+        <div class="nav-progress-meta">
+          <span class="nav-section-name" id="navSectionName">Setup</span>
+          <span class="nav-pct" id="navPct">0%</span>
+        </div>
+        <div class="nav-bar"><div class="nav-bar-fill" id="navFill" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="builder-body">
+    <div class="section-dots" id="sectionDots"></div>
+    <div id="sectionContent"></div>
+    <div class="section-nav">
+      <button class="btn btn-ghost" id="prevBtn" onclick="prevSection()" style="display:none">← Back</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextSection()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- GENERATING -->
+<div id="generating">
+  <div class="gen-logo"><span class="logo-line"></span>MVMNT<span class="logo-line"></span></div>
+  <div class="gen-spinner"></div>
+  <div class="gen-title">Writing Your Vision</div>
+  <div class="gen-sub">Your answers are being shaped into something worth reading every morning.</div>
+  <div class="gen-progress-wrap">
+    <div class="gen-steps" id="genSteps"></div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results">
+  <div class="results-nav">
+    <div class="rn-logo">MVMNT</div>
+    <div class="rn-title">Your Vivid Vision</div>
+    <button class="rn-btn" onclick="copyVision()">📋 Copy Vision</button>
+  </div>
+  <div class="results-body" id="resultsBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const data = {
+  name: '', horizon: '', horizonYear: '',
+  setup_word: '', setup_feeling: '', setup_change: '',
+  body_looks: '', body_feels: '', body_trains: '', body_eats: '', body_energy: '',
+  fam_partner: '', fam_kids: '', fam_friends: '', fam_presence: '',
+  car_role: '', car_impact: '', car_day: '', car_proud: '',
+  mon_income: '', mon_freedom: '', mon_gives: '', mon_security: '',
+  day_morning: '', day_home: '', day_schedule: '', day_joy: '',
+  grow_reading: '', grow_challenge: '', grow_identity: '', grow_legacy: ''
+};
+
+// Generated narratives from AI
+const generated = {};
+
+const sections = [
+  {
+    id: 'setup', chapter: 'Before We Begin', title: 'Your Vision,\nYour Horizon',
+    desc: 'A Vivid Vision is written in present tense — as if you are already living it. It\'s not a wish list. It\'s a declaration of the life you are building.',
+    questions: [
+      { id: 'name', label: 'Your Name', prompt: 'What\'s your first name?', hint: 'This vision belongs to you.', type: 'text', placeholder: 'Your first name' },
+      { id: 'horizon', label: 'Time Horizon', prompt: 'How far into the future?', hint: 'Cameron Herold recommends 3 years.', type: 'chips', options: ['1 year', '3 years', '5 years'] },
+      { id: 'setup_word', label: 'One Word', prompt: 'If your future life had one word, what would it be?', hint: 'Not what you think it should be. What it actually feels like.', type: 'text', placeholder: 'e.g. Alive. Whole. Free. Unstoppable.' },
+      { id: 'setup_feeling', label: 'The Feeling', prompt: 'How do you feel when you wake up in this future life?', hint: 'Write in present tense, as if it\'s already real.', type: 'textarea', placeholder: 'I wake up feeling...' },
+      { id: 'setup_change', label: 'The Biggest Shift', prompt: 'What is the single biggest thing that has changed from where you are today?', hint: 'The one change that makes everything else possible.', type: 'textarea', placeholder: 'The biggest change is...' }
+    ]
+  },
+  {
+    id: 'health', chapter: 'Chapter 1 · Health & Body', title: 'Your Body.\nYour Energy.',
+    desc: 'Your body is the vehicle for everything else. Describe it with honesty and ambition.',
+    questions: [
+      { id: 'body_looks', label: 'Physical Appearance', prompt: 'What does your body look like?', hint: 'Be specific and honest. This is your vision — claim it.', type: 'textarea', placeholder: 'My body is strong and...' },
+      { id: 'body_feels', label: 'How It Feels', prompt: 'How does your body feel day to day?', hint: 'Pain-free? Energized? Capable? Describe the sensation.', type: 'textarea', placeholder: 'Every day I feel...' },
+      { id: 'body_trains', label: 'Your Training', prompt: 'How do you train and move your body?', hint: 'Frequency, intensity, what you love doing.', type: 'textarea', placeholder: 'I train four days a week...' },
+      { id: 'body_eats', label: 'How You Fuel', prompt: 'How do you eat and fuel your body?', hint: 'Not a diet plan — how a healthy version of you eats.', type: 'textarea', placeholder: 'I eat with intention...' },
+      { id: 'body_energy', label: 'Your Energy', prompt: 'What is your energy like throughout the day?', hint: 'When do you peak? What does sustained energy feel like?', type: 'textarea', placeholder: 'My energy is...' }
+    ]
+  },
+  {
+    id: 'family', chapter: 'Chapter 2 · Family & Relationships', title: 'The People\nYou Love.',
+    desc: 'The richest life is built in relationship. Who are you to the people who matter most?',
+    questions: [
+      { id: 'fam_partner', label: 'Your Partner / Closest Relationship', prompt: 'What does this relationship look like?', hint: 'If this doesn\'t apply, describe your closest bond.', type: 'textarea', placeholder: 'My relationship is...' },
+      { id: 'fam_kids', label: 'Your Kids / Family', prompt: 'What kind of parent or family member are you?', hint: 'How do your people experience you? What do you model?', type: 'textarea', placeholder: 'As a parent / family member, I...' },
+      { id: 'fam_friends', label: 'Your Community', prompt: 'Who are the people around you?', hint: 'Quality of friendships, community, how connected you feel.', type: 'textarea', placeholder: 'My community is...' },
+      { id: 'fam_presence', label: 'Being Present', prompt: 'How present are you with the people you love?', hint: 'Not just physically — mentally and emotionally there.', type: 'textarea', placeholder: 'When I\'m with the people I love, I...' }
+    ]
+  },
+  {
+    id: 'career', chapter: 'Chapter 3 · Career & Purpose', title: 'The Work\nThat Matters.',
+    desc: 'Work isn\'t just how you make money — it\'s how you make meaning.',
+    questions: [
+      { id: 'car_role', label: 'What You Do', prompt: 'What is your role or business?', hint: 'Paint the picture. Size, team, what a typical week involves.', type: 'textarea', placeholder: 'I run / lead / build...' },
+      { id: 'car_impact', label: 'The Impact', prompt: 'Who do you serve, and what changes for them?', hint: 'Get specific. How many people? What shifts in their lives?', type: 'textarea', placeholder: 'My work changes lives by...' },
+      { id: 'car_day', label: 'A Great Day', prompt: 'What does a great workday look like?', hint: 'Where are you? Who are you with? What are you solving?', type: 'textarea', placeholder: 'A great workday starts with...' },
+      { id: 'car_proud', label: 'What You\'ve Built', prompt: 'What have you built that you\'re deeply proud of?', hint: 'Don\'t be modest. This is your vision — claim it.', type: 'textarea', placeholder: 'I am most proud of...' }
+    ]
+  },
+  {
+    id: 'money', chapter: 'Chapter 4 · Money & Finances', title: 'Financial\nFreedom.',
+    desc: 'Money is not the goal — but freedom is. Describe what financial health looks and feels like.',
+    questions: [
+      { id: 'mon_income', label: 'Your Income', prompt: 'What does your income look like?', hint: 'Be specific. Multiple streams? One focused business?', type: 'textarea', placeholder: 'My income comes from...' },
+      { id: 'mon_freedom', label: 'Financial Freedom', prompt: 'What does financial freedom feel like for you?', hint: 'Not a number — a feeling. What does having enough enable?', type: 'textarea', placeholder: 'Financial freedom means I...' },
+      { id: 'mon_gives', label: 'How You Give', prompt: 'How do you use your resources to give back?', hint: 'Generosity is part of financial health.', type: 'textarea', placeholder: 'I use my resources to...' },
+      { id: 'mon_security', label: 'Peace with Money', prompt: 'How do you feel about money — emotionally?', hint: 'Describe the emotional relationship you have with finances.', type: 'textarea', placeholder: 'When it comes to money, I feel...' }
+    ]
+  },
+  {
+    id: 'daily', chapter: 'Chapter 5 · Daily Life', title: 'How You\nActually Live.',
+    desc: 'The quality of your life is the quality of your average day.',
+    questions: [
+      { id: 'day_morning', label: 'Your Morning', prompt: 'Describe your ideal morning routine.', hint: 'What time? What do you do first? How do you set the day?', type: 'textarea', placeholder: 'I wake at 5:30am and...' },
+      { id: 'day_home', label: 'Your Home & Environment', prompt: 'Describe where you live and work.', hint: 'Where? What does it look like? How does it make you feel?', type: 'textarea', placeholder: 'I live in...' },
+      { id: 'day_schedule', label: 'Your Week', prompt: 'What does a typical week look like?', hint: 'Work, family, training, rest — how is it structured?', type: 'textarea', placeholder: 'My week is structured around...' },
+      { id: 'day_joy', label: 'Daily Joy', prompt: 'What small daily things bring you genuine joy?', hint: 'The rituals, the routines, the little things that make life rich.', type: 'textarea', placeholder: 'What brings me joy is...' }
+    ]
+  },
+  {
+    id: 'growth', chapter: 'Chapter 6 · Growth & Legacy', title: 'Who You\nAre Becoming.',
+    desc: 'The person who lives your Vivid Vision is not who you are today. Describe who they are.',
+    questions: [
+      { id: 'grow_reading', label: 'How You Learn', prompt: 'How do you invest in your own growth?', hint: 'Reading, mentors, experiences — how do you keep getting better?', type: 'textarea', placeholder: 'I invest in my growth by...' },
+      { id: 'grow_challenge', label: 'How You Handle Hard Things', prompt: 'How do you respond to adversity?', hint: 'Your future self has a different relationship with difficulty.', type: 'textarea', placeholder: 'When things get hard, I...' },
+      { id: 'grow_identity', label: 'Who You Are', prompt: 'How do you describe yourself — your character?', hint: 'Not your job title. Who are you as a person?', type: 'textarea', placeholder: 'I am someone who...' },
+      { id: 'grow_legacy', label: 'The Mark You Leave', prompt: 'What do you want people to say about you?', hint: 'What do people say about you at dinner in this future life?', type: 'textarea', placeholder: 'The people in my life know me as...' }
+    ]
+  }
+];
+
+let currentSection = 0;
+
+function startBuilder() {
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('builder').style.display = 'block';
+  renderDots(); renderSection();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderDots() {
+  document.getElementById('sectionDots').innerHTML = sections.map((s, i) =>
+    `<div class="dot ${i===currentSection?'active':i<currentSection?'done':''}" id="dot-${i}"></div>`
+  ).join('');
+}
+
+function updateDots() {
+  sections.forEach((s, i) => {
+    const d = document.getElementById(`dot-${i}`);
+    if (d) d.className = `dot ${i===currentSection?'active':i<currentSection?'done':''}`;
+  });
+}
+
+function renderSection() {
+  const s = sections[currentSection];
+  const pct = Math.round((currentSection / sections.length) * 100);
+  document.getElementById('navSectionName').textContent = s.chapter;
+  document.getElementById('navPct').textContent = pct + '%';
+  document.getElementById('navFill').style.width = pct + '%';
+  document.getElementById('prevBtn').style.display = currentSection === 0 ? 'none' : 'block';
+  document.getElementById('nextBtn').textContent = currentSection === sections.length - 1 ? 'Generate My Vision →' : 'Continue →';
+  updateDots();
+
+  const qs = s.questions.map(q => {
+    const val = data[q.id] || '';
+    let inp = '';
+    if (q.type === 'text') {
+      inp = `<input type="text" id="q_${q.id}" placeholder="${q.placeholder}" value="${val.replace(/"/g,'&quot;')}" oninput="data['${q.id}']=this.value" />`;
+    } else if (q.type === 'textarea') {
+      inp = `<textarea id="q_${q.id}" placeholder="${q.placeholder}" oninput="data['${q.id}']=this.value" rows="3">${val}</textarea>`;
+    } else if (q.type === 'chips') {
+      inp = `<div class="chip-group">${q.options.map(opt =>
+        `<div class="chip ${val===opt?'selected':''}" onclick="pickChip('${q.id}',this,'${opt}')">${opt}</div>`
+      ).join('')}</div>`;
+    }
+    return `<div class="q-block"><div class="q-label">${q.label}</div><div class="q-prompt">${q.prompt}</div><div class="q-hint">${q.hint}</div>${inp}</div>`;
+  }).join('');
+
+  document.getElementById('sectionContent').innerHTML = `
+    <div class="section-intro">
+      <div class="si-chapter">${s.chapter}</div>
+      <div class="si-title">${s.title.replace('\n','<br>')}</div>
+      <div class="si-desc">${s.desc}</div>
+    </div>
+    <div class="questions-stack">${qs}</div>
+  `;
+}
+
+function pickChip(fieldId, el, val) {
+  data[fieldId] = val;
+  if (fieldId === 'horizon') {
+    const yrs = parseInt(val);
+    data.horizonYear = (new Date().getFullYear() + yrs).toString();
+  }
+  el.closest('.chip-group').querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function syncSection() {
+  sections[currentSection].questions.forEach(q => {
+    const el = document.getElementById(`q_${q.id}`);
+    if (el) data[q.id] = el.value.trim ? el.value.trim() : el.value;
+  });
+  if (data.horizon && !data.horizonYear) {
+    data.horizonYear = (new Date().getFullYear() + parseInt(data.horizon)).toString();
+  }
+}
+
+function nextSection() {
+  syncSection();
+  if (currentSection < sections.length - 1) {
+    currentSection++;
+    renderSection();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    startGenerating();
+  }
+}
+
+function prevSection() {
+  syncSection();
+  if (currentSection > 0) { currentSection--; renderSection(); }
+}
+
+// ── AI GENERATION ──
+const sectionSpecs = [
+  { key: 'intro',   label: 'Opening narrative' },
+  { key: 'health',  label: 'Health & Body' },
+  { key: 'family',  label: 'Family & Relationships' },
+  { key: 'career',  label: 'Career & Purpose' },
+  { key: 'money',   label: 'Money & Finances' },
+  { key: 'daily',   label: 'Daily Life' },
+  { key: 'growth',  label: 'Growth & Legacy' }
+];
+
+async function startGenerating() {
+  document.getElementById('builder').style.display = 'none';
+  document.getElementById('generating').style.display = 'flex';
+
+  // Render step list
+  document.getElementById('genSteps').innerHTML = sectionSpecs.map((s, i) =>
+    `<div class="gen-step" id="gstep-${i}"><div class="gen-step-dot"></div>${s.label}</div>`
+  ).join('');
+
+  // Generate each section sequentially
+  for (let i = 0; i < sectionSpecs.length; i++) {
+    setGenStep(i);
+    await generateSection(sectionSpecs[i].key, i);
+    doneGenStep(i);
+  }
+
+  showResults();
+}
+
+function setGenStep(i) {
+  document.querySelectorAll('.gen-step').forEach((el, idx) => {
+    el.className = `gen-step ${idx === i ? 'active' : idx < i ? 'done' : ''}`;
+  });
+}
+
+function doneGenStep(i) {
+  const el = document.getElementById(`gstep-${i}`);
+  if (el) el.className = 'gen-step done';
+}
+
+async function generateSection(key, idx) {
+  const name = data.name || 'this person';
+  const horizon = data.horizon || '3 years';
+  const horizonYear = data.horizonYear || (new Date().getFullYear() + 3).toString();
+
+  let prompt = '';
+
+  if (key === 'intro') {
+    prompt = `You are writing the opening narrative paragraph of a personal "Vivid Vision" document for ${name}. 
+
+Their answers:
+- How they feel waking up: "${data.setup_feeling}"
+- The biggest shift in their life: "${data.setup_change}"
+- One word that describes their future life: "${data.setup_word}"
+- Time horizon: ${horizon} from now (the year ${horizonYear})
+
+Write 2-3 powerful, emotionally resonant paragraphs in present tense (as if it's already ${horizonYear}). Use their exact words and feelings woven naturally into the narrative. Make it feel like something they would want to read every single morning. Use "I" — write in first person as them. Do not use clichés or generic language. Make it specific, vivid, and deeply personal. Do not use bullet points or headers — pure flowing prose only.`;
+
+  } else if (key === 'health') {
+    prompt = `You are writing the "Health & Body" chapter of a personal Vivid Vision document for ${name} set in ${horizonYear}.
+
+Their answers about their body and health:
+- What their body looks like: "${data.body_looks}"
+- How their body feels day to day: "${data.body_feels}"
+- How they train: "${data.body_trains}"
+- How they eat: "${data.body_eats}"
+- Their energy: "${data.body_energy}"
+
+Write 2-3 paragraphs in present tense, first person ("I"), as if it's ${horizonYear} and they are living this. Weave their specific answers into vivid, emotionally resonant prose. Don't just repeat their answers back — interpret them, elevate the language, connect the dots between their physical life and how it makes them feel. Make it feel earned and real. No bullet points, no headers, no clichés. Pure narrative prose.`;
+
+  } else if (key === 'family') {
+    prompt = `You are writing the "Family & Relationships" chapter of a personal Vivid Vision document for ${name} set in ${horizonYear}.
+
+Their answers about relationships:
+- Their partner / closest relationship: "${data.fam_partner}"
+- As a parent / family member: "${data.fam_kids}"
+- Their community and friends: "${data.fam_friends}"
+- How present they are: "${data.fam_presence}"
+
+Write 2-3 paragraphs in present tense, first person ("I"), as if it's ${horizonYear}. Weave their specific answers into a narrative about who they are in relationship — not just facts, but the feeling of being deeply connected, present, and loved. Make it emotional and personal. No bullet points, no headers. Pure prose.`;
+
+  } else if (key === 'career') {
+    prompt = `You are writing the "Career & Purpose" chapter of a personal Vivid Vision document for ${name} set in ${horizonYear}.
+
+Their answers about work and purpose:
+- Their role or business: "${data.car_role}"
+- The impact they have: "${data.car_impact}"
+- What a great workday looks like: "${data.car_day}"
+- What they're most proud of: "${data.car_proud}"
+
+Write 2-3 paragraphs in present tense, first person ("I"), as if it's ${horizonYear}. Make the work sound meaningful and alive — not a job description, but a calling. Use their specific details. Capture both what they do and why it matters. No bullet points or headers. Flowing prose only.`;
+
+  } else if (key === 'money') {
+    prompt = `You are writing the "Money & Finances" chapter of a personal Vivid Vision document for ${name} set in ${horizonYear}.
+
+Their answers about finances:
+- Their income: "${data.mon_income}"
+- What financial freedom means to them: "${data.mon_freedom}"
+- How they give: "${data.mon_gives}"
+- Their emotional relationship with money: "${data.mon_security}"
+
+Write 2 paragraphs in present tense, first person ("I"), as if it's ${horizonYear}. Capture not just financial facts but the feeling of security, freedom, and generosity. Connect money to the deeper things it enables in their life. No bullet points or headers. Pure narrative.`;
+
+  } else if (key === 'daily') {
+    prompt = `You are writing the "Daily Life" chapter of a personal Vivid Vision document for ${name} set in ${horizonYear}.
+
+Their answers about daily life:
+- Their morning: "${data.day_morning}"
+- Their home and environment: "${data.day_home}"
+- How their week is structured: "${data.day_schedule}"
+- What brings them daily joy: "${data.day_joy}"
+
+Write 2-3 paragraphs in present tense, first person ("I"), as if it's ${horizonYear}. Capture the texture and rhythm of their life — the small moments, the rituals, the feeling of living intentionally. Make the ordinary feel extraordinary because it's exactly the life they designed. No bullet points or headers.`;
+
+  } else if (key === 'growth') {
+    prompt = `You are writing the "Growth & Legacy" chapter of a personal Vivid Vision document for ${name} set in ${horizonYear}.
+
+Their answers about who they're becoming:
+- How they invest in growth: "${data.grow_reading}"
+- How they handle adversity: "${data.grow_challenge}"
+- Their identity and character: "${data.grow_identity}"
+- The mark they leave: "${data.grow_legacy}"
+
+Write 2-3 paragraphs in present tense, first person ("I"), as if it's ${horizonYear}. This chapter should feel like the deepest, most personal one — about who they truly are, not what they do. Capture their character, their resilience, and the legacy they're quietly building every day. End with something powerful. No bullet points or headers.`;
+  }
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const json = await res.json();
+    const text = json.content?.find(b => b.type === 'text')?.text || '';
+    generated[key] = text.trim();
+  } catch (e) {
+    generated[key] = '[Could not generate this section — please try again.]';
+  }
+}
+
+function showResults() {
+  document.getElementById('generating').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+
+  const name = data.name || 'You';
+  const nameUpper = name.toUpperCase();
+  const horizonYear = data.horizonYear || (new Date().getFullYear() + 3).toString();
+
+  const chapterDefs = [
+    { key: 'health',  icon: '⚡', chapter: 'Chapter 1', title: 'Health & Body' },
+    { key: 'family',  icon: '🤝', chapter: 'Chapter 2', title: 'Family & Relationships' },
+    { key: 'career',  icon: '🔥', chapter: 'Chapter 3', title: 'Career & Purpose' },
+    { key: 'money',   icon: '💰', chapter: 'Chapter 4', title: 'Money & Finances' },
+    { key: 'daily',   icon: '🌿', chapter: 'Chapter 5', title: 'Daily Life' },
+    { key: 'growth',  icon: '🧠', chapter: 'Chapter 6', title: 'Growth & Legacy' }
+  ];
+
+  const formatNarrative = (text) => {
+    if (!text) return '<p>—</p>';
+    return text.split('\n\n').filter(p => p.trim()).map(p => `<p>${p.trim()}</p>`).join('');
+  };
+
+  const chaptersHTML = chapterDefs.map(c => `
+    <div class="vision-section">
+      <div class="vs-head">
+        <div class="vs-icon">${c.icon}</div>
+        <div>
+          <div class="vs-chapter">${c.chapter}</div>
+          <div class="vs-title">${c.title}</div>
+        </div>
+      </div>
+      <div class="vs-narrative">
+        <div class="vs-narrative-text">${formatNarrative(generated[c.key])}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('resultsBody').innerHTML = `
+    <div class="vision-cover">
+      <div class="vc-eyebrow">A declaration of the life being built by</div>
+      <div class="vc-name">${nameUpper}</div>
+      <div class="vc-subtitle">Vivid Vision · MVMNT</div>
+      <div class="vc-meta">
+        <div class="vc-meta-cell">
+          <div class="vc-meta-label">Written in</div>
+          <div class="vc-meta-value">${new Date().getFullYear()}</div>
+        </div>
+        <div class="vc-meta-cell">
+          <div class="vc-meta-label">Living it in</div>
+          <div class="vc-meta-value red">${horizonYear}</div>
+        </div>
+        <div class="vc-meta-cell">
+          <div class="vc-meta-label">One word</div>
+          <div class="vc-meta-value">${data.setup_word || '—'}</div>
+        </div>
+        <div class="vc-meta-cell">
+          <div class="vc-meta-label">Horizon</div>
+          <div class="vc-meta-value">${data.horizon || '3 years'}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="narrative-card">
+      <span class="nc-quote">"</span>
+      <div class="nc-label">The Vision · ${horizonYear} · Written in Present Tense</div>
+      <div class="nc-body">${formatNarrative(generated['intro'])}</div>
+      <div class="nc-sig">— ${nameUpper} · ${horizonYear}</div>
+    </div>
+
+    ${chaptersHTML}
+
+    <div class="closing-card">
+      <div class="cc-label">Read This Daily</div>
+      <div class="cc-text">This Is Not A Dream.\nThis Is A Direction.</div>
+      <div class="cc-sub">Your mind moves toward what it can clearly see. Read this every morning. Let it pull you forward. The person who wrote this already knows the way.</div>
+    </div>
+
+    <div class="action-row">
+      <button class="act-btn primary" onclick="copyVision()">📋 Copy Full Vision</button>
+      <button class="act-btn secondary" onclick="startOver()">↺ Start Over</button>
+    </div>
+
+    <div class="mvmnt-footer">MVMNT Oxnard · CrossFit Ventura</div>
+  `;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copyVision() {
+  const name = data.name || 'You';
+  const horizonYear = data.horizonYear || '';
+
+  const clean = (t) => t ? t.replace(/<[^>]*>/g, '').trim() : '';
+
+  let text = `══════════════════════════════════════\nVIVID VISION — ${name.toUpperCase()}\nWritten: ${new Date().getFullYear()} · Living It: ${horizonYear}\nOne Word: ${data.setup_word || ''}\n══════════════════════════════════════\n\n`;
+  text += `THE VISION\n\n${clean(generated['intro'])}\n\n`;
+
+  const chapters = [
+    { title: 'HEALTH & BODY', key: 'health' },
+    { title: 'FAMILY & RELATIONSHIPS', key: 'family' },
+    { title: 'CAREER & PURPOSE', key: 'career' },
+    { title: 'MONEY & FINANCES', key: 'money' },
+    { title: 'DAILY LIFE', key: 'daily' },
+    { title: 'GROWTH & LEGACY', key: 'growth' }
+  ];
+
+  chapters.forEach(c => {
+    text += `──────────────────────────────────────\n${c.title}\n──────────────────────────────────────\n\n${clean(generated[c.key])}\n\n`;
+  });
+
+  text += `══════════════════════════════════════\nThis is not a dream. This is a direction.\nRead it daily. Let it pull you forward.\n\nMVMNT Oxnard · CrossFit Ventura\n══════════════════════════════════════`;
+
+  navigator.clipboard.writeText(text).then(() => showToast('Vision copied ✓'));
+}
+
+function startOver() {
+  Object.keys(data).forEach(k => data[k] = '');
+  Object.keys(generated).forEach(k => delete generated[k]);
+  currentSection = 0;
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('landing').style.display = 'flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+</script>
+</body>
+</html>

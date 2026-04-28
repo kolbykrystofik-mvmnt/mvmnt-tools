@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 // ── LIGHT BRAND PALETTE ────────────────────────────────────────────────────
 const C = {
@@ -162,19 +161,59 @@ function calcMacros(d) {
   calories = Math.max(calories, minCal);
 
   const weightLb = d.unit === "imperial" ? d.weight : d.weight * 2.20462;
+
+  // ── BUILD PROTEIN MULTIPLIER FROM ALL VARIABLES ──
+  let proteinPerLb = 0.75; // conservative evidence-based floor
+
+  // 1. GOAL — deficit needs more protein to preserve muscle
+  if (d.goal === "aggressive_loss")  proteinPerLb += 0.30;
+  else if (d.goal === "moderate_loss")  proteinPerLb += 0.20;
+  else if (d.goal === "mild_loss")      proteinPerLb += 0.10;
+  else if (d.goal === "aggressive_gain") proteinPerLb += 0.15;
+  else if (d.goal === "moderate_gain")   proteinPerLb += 0.10;
+  else if (d.goal === "mild_gain")       proteinPerLb += 0.05;
+
+  // 2. TRAINING TYPE — high-demand training increases muscle protein turnover
+  if (d.trainingType === "strength")    proteinPerLb += 0.10;
+  else if (d.trainingType === "crossfit")    proteinPerLb += 0.10;
+  else if (d.trainingType === "hiit")        proteinPerLb += 0.08;
+  else if (d.trainingType === "hypertrophy") proteinPerLb += 0.10;
+  else if (d.trainingType === "cardio")      proteinPerLb += 0.05;
+  else if (d.trainingType === "sport")       proteinPerLb += 0.07;
+  else if (d.trainingType === "mixed")       proteinPerLb += 0.07;
+
+  // 3. TRAINING INTENSITY — harder sessions = more breakdown = more repair needed
+  if (d.trainingIntensity === "high")   proteinPerLb += 0.10;
+  else if (d.trainingIntensity === "medium") proteinPerLb += 0.05;
+
+  // 4. TRAINING FREQUENCY — more sessions per week = more cumulative demand
+  if (d.trainingDays >= 6)      proteinPerLb += 0.10;
+  else if (d.trainingDays >= 4) proteinPerLb += 0.05;
+  else if (d.trainingDays >= 2) proteinPerLb += 0.02;
+
+  // 5. AGE — anabolic resistance increases with age, older athletes need more protein
+  if (d.age >= 50)      proteinPerLb += 0.15;
+  else if (d.age >= 40) proteinPerLb += 0.10;
+
+  // 6. BODY TYPE — ectomorphs (hard gainers) benefit from higher protein stimulus
+  if (d.bodyType === "ectomorph") proteinPerLb += 0.05;
+
+  // 7. DIET STYLE — enforce floors based on dietary approach
+  if (d.dietStyle === "highprot") proteinPerLb = Math.max(proteinPerLb, 1.0);
+  else if (d.dietStyle === "keto") proteinPerLb = Math.max(proteinPerLb, 0.8);
+  else if (d.dietStyle === "lowcarb") proteinPerLb = Math.max(proteinPerLb, 0.85);
+
+  // Cap at 1.4g/lb — beyond this there's no additional muscle-building benefit
+  proteinPerLb = Math.min(proteinPerLb, 1.4);
+
+  // ── APPLY TO LEAN BODY MASS IF BODY FAT IS KNOWN (more accurate) ──
   let protein;
   if (d.knowsBF && d.bodyFat > 0) {
     const lbmLb = weightLb * (1 - d.bodyFat / 100);
-    let multiplier = 1.0;
-    if (d.goal === "aggressive_loss") multiplier = 1.2;
-    if (d.goal === "aggressive_gain") multiplier = 1.1;
-    protein = Math.round(lbmLb * multiplier);
+    // LBM-based uses a slightly higher multiplier since it's off lean mass not total weight
+    const lbmMultiplier = Math.min(proteinPerLb * 1.15, 1.6);
+    protein = Math.round(lbmLb * lbmMultiplier);
   } else {
-    let proteinPerLb = 0.8;
-    if (d.goal === "aggressive_gain" || d.goal === "moderate_gain") proteinPerLb = 0.9;
-    if (d.goal === "aggressive_loss" || d.goal === "moderate_loss") proteinPerLb = 1.1;
-    if (d.trainingDays >= 5) proteinPerLb += 0.1;
-    if (d.trainingType === "strength") proteinPerLb += 0.05;
     protein = Math.round(weightLb * proteinPerLb);
   }
 
@@ -195,7 +234,6 @@ function calcMacros(d) {
 
 // ── MAIN ──────────────────────────────────────────────────────────────────
 export default function MacroCalc() {
-  const navigate = useNavigate();
   const [section, setSection] = useState(0);
   const [results, setResults] = useState(null);
   const [d, setD] = useState({
@@ -267,8 +305,8 @@ export default function MacroCalc() {
 
       {/* ── HEADER ── */}
       <div style={{ background: C.accent, padding: "14px 20px", display: "flex", alignItems: "center", gap: 12 }}>
-        <button onClick={() => navigate("/")} style={{ ...mono, background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: 6, padding: "6px 12px", cursor: "pointer", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", flexShrink: 0 }}>← Tools</button>
-        <div style={{ flex: 1 }}>
+        <div style={{ width: 34, height: 34, background: "rgba(255,255,255,0.20)", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>📊</div>
+        <div>
           <div style={{ ...mono, fontSize: 9, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.65)" }}>MVMNT | CrossFit Ventura</div>
           <div style={{ fontSize: 16, fontWeight: "bold", color: "#fff", letterSpacing: "0.01em" }}>Macro Calculator</div>
         </div>
@@ -704,15 +742,21 @@ export default function MacroCalc() {
             {/* Personalization notes */}
             {(() => {
               const notes = [
-                d.knowsBF ? `Protein calculated from lean body mass (${Math.round(results.weightLb * (1 - d.bodyFat / 100))} lbs LBM)` : null,
-                d.trainingType === "crossfit"  ? "CrossFit/functional fitness calorie bonus applied" : null,
-                d.trainingType === "strength"  ? "Strength training protein premium applied" : null,
-                d.sleepQuality === "poor"      ? "Poor sleep detected — metabolic efficiency reduced slightly" : null,
-                (d.stressLevel === "high" || d.stressLevel === "extreme") ? "High stress — cortisol adjustment applied" : null,
-                d.dietStyle === "keto"         ? "Carbs capped at 30g for ketogenic protocol" : null,
-                (d.eatingWindow && d.eatingWindow !== "none") ? `IF-friendly distribution across ${d.mealsPerDay} meals in your eating window` : null,
-                d.goal.includes("loss")        ? "Protein elevated to preserve muscle tissue during deficit" : null,
-                d.trainingDays >= 5            ? "High training frequency protein bonus applied" : null,
+                d.knowsBF ? `Protein calculated from lean body mass (${Math.round(results.weightLb * (1 - d.bodyFat / 100))} lbs LBM) with anabolic resistance factor` : null,
+                !d.knowsBF ? `Protein calculated at ~${((results.protein / results.weightLb) * 10 / 10).toFixed(2)}g per lb of bodyweight` : null,
+                d.dietStyle === "highprot" ? "High protein diet — minimum 1.0g/lb floor applied" : null,
+                d.dietStyle === "keto" ? "Carbs capped at 30g · ketogenic fat distribution applied" : null,
+                d.dietStyle === "lowcarb" ? "Low carb — protein minimum 0.85g/lb applied" : null,
+                (d.trainingType === "strength" || d.trainingType === "crossfit" || d.trainingType === "hypertrophy") ? `${d.trainingType === "crossfit" ? "CrossFit" : d.trainingType === "strength" ? "Strength" : "Hypertrophy"} training protein premium applied (+0.10g/lb)` : null,
+                d.trainingIntensity === "high" ? "High training intensity — additional protein for muscle repair (+0.10g/lb)" : null,
+                d.trainingDays >= 6 ? "6–7 training days — high frequency protein bonus applied (+0.10g/lb)" : d.trainingDays >= 4 ? "4–5 training days — moderate frequency protein bonus applied (+0.05g/lb)" : null,
+                d.age >= 50 ? "Age 50+ — anabolic resistance adjustment applied, higher protein needed (+0.15g/lb)" : d.age >= 40 ? "Age 40+ — early anabolic resistance adjustment applied (+0.10g/lb)" : null,
+                d.bodyType === "ectomorph" ? "Ectomorph body type — higher protein stimulus applied (+0.05g/lb)" : null,
+                d.goal.includes("loss") ? `${d.goal === "aggressive_loss" ? "Aggressive" : d.goal === "moderate_loss" ? "Moderate" : "Mild"} deficit — protein elevated to preserve lean muscle mass` : null,
+                (d.goal === "aggressive_gain" || d.goal === "moderate_gain") ? "Muscle gain goal — protein surplus applied to support hypertrophy" : null,
+                d.sleepQuality === "poor" ? "Poor sleep — metabolic efficiency reduced slightly" : null,
+                (d.stressLevel === "high" || d.stressLevel === "extreme") ? "High stress — cortisol adjustment applied to TDEE" : null,
+                (d.eatingWindow && d.eatingWindow !== "none") ? `IF protocol (${d.eatingWindow}) — distribute across ${d.mealsPerDay} meals within your eating window` : null,
               ].filter(Boolean);
               return notes.length > 0 ? (
                 <div style={{ ...card, borderLeft: `3px solid ${C.gold}`, background: "#FFFBF2" }}>

@@ -36,7 +36,7 @@ const TOOLS = [
     emoji: "🔥",
     label: "Vivid Vision",
     tagline: "A written picture of the life you're building",
-    description: "Answer questions across 7 areas of life — health, family, career, money, daily life, and growth. Claude reads your answers and writes your vision for you in present tense, as if you're already living it.",
+    description: "Answer questions across 7 areas of life — health, family, career, money, daily life, and growth. Your answers are read and re-written for your vision for you in present tense, as if you're already living it.",
     color: "#2A1A1A",
     tags: ["Life Clarity", "Goal Setting", "AI-Written", "Cameron Herold"],
   },
